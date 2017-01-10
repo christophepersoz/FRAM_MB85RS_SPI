@@ -49,11 +49,11 @@ v0.3 - Development in progress, THE LIBRARY WORKS FOR BYTE, SHORT AND LONG READ/
 - [x] Add OP_CODE for SPI FRAM chips
 - [x] Creation of wroking test example / benchmark speed
 - [ ] Add High Speed Reading Mode and Sleep Mode
-- [x] Tests
+- [x] Tests on MB85RS1MT SPI
 - [x] Update/change examples
 - [ ] Read / Write an array of bytes
 - [ ] Read / Write one array of shorts
-- [ ] Publish v1.0
+- [x] Publish a working version
 There is a bit of work to adapt the original library, but it's on the good way.
 
 
