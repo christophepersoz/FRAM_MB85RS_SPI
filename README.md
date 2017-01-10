@@ -5,7 +5,6 @@ SPI Ferroelectric Random Access Memory (FRAM). Read/write endurance for each mem
 Supports 64K, 128K, 256K, 512K, 1M and 2M chips.
 These memories chips can work up to 25MHz in SPI Mode 0 or Mode 3.
 
-
 ## Features ##
 - Device settings detection (if Device ID feature is available)
 - Write one 8-bits, 16-bits or 32-bits value
@@ -25,6 +24,8 @@ These memories chips can work up to 25MHz in SPI Mode 0 or Mode 3.
 
 ## Revision History ##
 v0.3 - Development in progress, THE LIBRARY WORKS FOR BYTE, SHORT AND LONG READ/WRITE
+
+[Download it here !](https://github.com/christophepersoz/FRAM_MB85RS_SPI/archive/master.zip)
 
 ## Devices ##
 
