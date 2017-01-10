@@ -1,0 +1,43 @@
+###########################################
+# Syntax Coloring Map For FRAM_MB85RS_SPI.h
+###########################################
+
+###########################################
+# Datatypes (KEYWORD1)
+###########################################
+
+FRAM_MB85RS_SPI KEYWORD1
+
+###########################################
+# Methods and Functions (KEYWORD2)
+###########################################
+init           	KEYWORD2
+checkDevice		KEYWORD2
+isAvailable     KEYWORD2
+getWPStatus		KEYWORD2
+enableWP		KEYWORD2
+disableWP		KEYWORD2
+read            KEYWORD2
+write           KEYWORD2
+eraseChip       KEYOWRD2
+getMaxMemAdr    KEYWORD2
+
+###########################################
+# Constants (LITERAL1)
+###########################################
+DENSITY_MB85RS_64	LITERAL1
+DENSITY_MB85RS_128	LITERAL1
+DENSITY_MB85RS_256	LITERAL1
+DENSITY_MB85RS_512	LITERAL1
+DENSITY_MB85RS_1024	LITERAL1
+DENSITY_MB85RS_2048	LITERAL1
+
+FRAM_WRSR		LITERAL1
+FRAM_WRITE		LITERAL1
+FRAM_READ		LITERAL1
+FRAM_WRDI		LITERAL1
+FRAM_RDSR		LITERAL1
+FRAM_WREN		LITERAL1
+FRAM_FSTRD		LITERAL1
+FRAM_RDID		LITERAL1
+FRAM_SLEEP		LITERAL1

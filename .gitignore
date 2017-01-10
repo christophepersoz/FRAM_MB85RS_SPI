@@ -1,0 +1,7 @@
+# XCode workspace 
+FRAM_M85RS_SPI.xcworkspace
+
+FRAM_M85RS_SPI.xcworkspace/**
+
+# Theme config for public page
+_config.yml
