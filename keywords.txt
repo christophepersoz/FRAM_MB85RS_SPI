@@ -19,6 +19,8 @@ enableWP		KEYWORD2
 disableWP		KEYWORD2
 read            KEYWORD2
 write           KEYWORD2
+readArray       KEYWORD2
+writeArray      KEYWORD2
 eraseChip       KEYOWRD2
 getMaxMemAdr    KEYWORD2
 
