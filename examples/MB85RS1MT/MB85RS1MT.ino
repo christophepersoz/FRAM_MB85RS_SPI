@@ -33,11 +33,6 @@ elapsedMicros _tExe;
 uint8_t FRAM_CS = 21  ;
 static FRAM_MB85RS_SPI FRAM(FRAM_CS);
 
-// Vars
-uint16_t addr = 0;
-
-
-
 // Functions
 void printTime()
 {
@@ -47,9 +42,6 @@ void printTime()
     
   Serial.print("   Execution time: "); (_tExe > 10000) ? Serial.print(buf) : Serial.print(_tExe); Serial.println((_tExe > 100000) ? "s" : " us");
 }
-
-
-
 
 void setup()
 {
@@ -88,18 +80,18 @@ void setup()
     Serial.println("ERROR");
 
   // Read the updated Byte for check
-  Serial.println("Read after update: ");
+  Serial.println("\nRead after update: ");
   _tExe = 0;
   if (FRAM.read(0x3F86, &byteVal))
   {
     printTime();
-    Serial.print("Restarted = "); Serial.print(byteVal); Serial.println(" times\n");
+    Serial.print("Restarted = "); Serial.print(byteVal); Serial.println(" times");
   } else
     Serial.println("ERROR");
 
   
   //** SHORT / uint16_t
-
+  uint16_t addr = 0x0;
   uint16_t shortVal = 12224;
   Serial.print("\n** READ/WRITE SHORT (uint16_t)\n");
   
@@ -112,7 +104,7 @@ void setup()
     Serial.println("ERROR");
 
   // Read the updated short for check
-  Serial.println("Read after update, ");
+  Serial.println("\nRead after update, ");
   _tExe = 0;
   if (FRAM.read(addr, &shortVal))
   {
@@ -136,7 +128,7 @@ void setup()
     Serial.println("ERROR");
 
   // Read the updated short for check
-  Serial.println("Read after update, ");
+  Serial.println("\nRead after update, ");
   _tExe = 0;
   if (FRAM.read(addr, &longVal))
   {
@@ -145,6 +137,31 @@ void setup()
   } else
     Serial.println("ERROR");
 
+
+  //** WRITE an array of bytes
+  Serial.print("\n** WRITE an array of 10 bytes(uint8_t) elements\n");
+  _tExe = 0;
+  uint8_t arrayB[10] = {0x4, 0x8, 0xFF, 0x2A, 0x6F, 0x4D, 0x56, 0x9D, 0x32, 0x12}; 
+  uint32_t addrArray = 0x0;
+  
+  if (FRAM.writeArray(addrArray, arrayB, 10))
+    printTime();
+  else
+    Serial.println("ERROR to write the array");
+
+
+  //** READ an array of bytes
+  Serial.print("\n** READ an array of 10 bytes(uint8_t) elements\n");
+  _tExe = 0;
+
+  if (FRAM.readArray(addrArray, arrayB, 10))
+    printTime();
+  else
+    Serial.println("ERROR to read the array");
+
+
+  
+    
 
   //** Dump the entire memory!
 #ifdef DUMP_FRAM

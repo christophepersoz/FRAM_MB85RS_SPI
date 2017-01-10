@@ -8,7 +8,7 @@
 
     @section  HISTORY
 
-    v0.3 - Working Library, see ReadMe for more informations
+    v0.5 - See ReadMe for more informations
  
     @section LICENSE
 
@@ -101,7 +101,7 @@ FRAM_MB85RS_SPI::FRAM_MB85RS_SPI(uint8_t cs, uint8_t wp)
 /*!
 ///     @brief   init()
 ///              Inititalize the F-RAM chip
-///     @return  if SER_OUT, provides all the informations on the chip
+///     @return  if DEBUG_TRACE, provides all the informations on the chip
 **/
 void FRAM_MB85RS_SPI::init()
 {
@@ -110,7 +110,7 @@ void FRAM_MB85RS_SPI::init()
     
     boolean deviceFound = checkDevice();
     
-#ifdef SER_OUT
+#ifdef DEBUG_TRACE
     if (!Serial)
         Serial.begin(115200);
     while (!Serial) {}
@@ -169,7 +169,7 @@ boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint8_t *value)
     if (framAddr >= _maxaddress || !_framInitialised)
         return false;
     
-//#ifdef SER_OUT
+//#ifdef DEBUG_TRACE
 //    Serial.print("Read address : ");
 //    Serial.println(framAddr, BIN);
 //#endif
@@ -364,6 +364,89 @@ boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint32_t value)
 
 
 /*!
+///     @brief   readArray()
+///              Read an array made of 8bits values from the specified F-RAM address
+///     @param   framAddr, the memory address to read from
+///     @param   values[], the array of 8bits value to read
+///     @param   nb, the number of elements to read
+///     @return  0: error
+///              1: ok
+///     @note    F-RAM provide a continuous reading with auto-increment of the address
+**/
+boolean FRAM_MB85RS_SPI::readArray(uint32_t startAddr, uint8_t values[], size_t nbItems )
+{
+    if ( startAddr >= _maxaddress
+        || ((startAddr + nbItems - 1) >= _maxaddress)
+        || nbItems == 0
+        || !_framInitialised )
+        return false;
+    
+    _csASSERT();
+    // Read byte operation
+    SPI.transfer(FRAM_READ);
+    _setMemAddr(&startAddr);
+    
+    // Read values
+    for (uint32_t i = 0; i < nbItems; i++)
+    {
+        values[i] = SPI.transfer(0);
+#ifdef DEBUG_TRACE
+        Serial.print("Adr 0x"); Serial.print(startAddr+i, HEX);
+        Serial.print(", Value[");Serial.print(i); Serial.print("] = 0x"); Serial.println(values[i], HEX);
+#endif
+    }
+    
+    _csRELEASE();
+    
+    return true;
+}
+
+
+
+/*!
+///     @brief   writeArray()
+///              Write an array made of 8bits values from the specified F-RAM address
+///     @param   framAddr, the memory address to write from
+///     @param   values[], the array of 8bits value to write
+///     @param   nb, the number of elements to write
+///     @return  0: error
+///              1: ok
+///     @note    F-RAM provide a continuous writing with auto-increment of the address
+**/
+boolean FRAM_MB85RS_SPI::writeArray(uint32_t startAddr, uint8_t values[], uint32_t nbItems )
+{
+    if ( startAddr >= _maxaddress
+        || ((startAddr + nbItems - 1) >= _maxaddress)
+        || nbItems == 0
+        || !_framInitialised )
+        return false;
+    
+    _csASSERT();
+        SPI.transfer(FRAM_WREN); // Set Memory Write Enable Latch
+    _csRELEASE();
+    
+    // Write byte operation
+    _csASSERT();
+    SPI.transfer(FRAM_WRITE);
+    _setMemAddr(&startAddr);
+    
+    // Write values
+    for (uint32_t i = 0; i < nbItems; i++)
+        SPI.transfer(values[i]);
+    
+    _csRELEASE();
+    
+    // Reset Memory Write Enable Latch
+    _csASSERT();
+        SPI.transfer(FRAM_WRDI);
+    _csRELEASE();
+    
+    return true;
+}
+
+
+
+/*!
 ///    @brief   isAvailable()
 ///             Returns the readiness of the memory chip
 ///    @return  0: ready
@@ -402,7 +485,7 @@ boolean FRAM_MB85RS_SPI::enableWP(void)
 {
 	if (_wp)
     {
-		digitalWrite(_wpPin,HIGH);
+		digitalWriteFast(_wpPin,HIGH);
 		_wpStatus = true;
         return true;
 	}
@@ -422,7 +505,7 @@ boolean FRAM_MB85RS_SPI::disableWP()
 {
 	if (_wp)
     {
-		digitalWrite(_wpPin,LOW);
+		digitalWriteFast(_wpPin,LOW);
 		_wpStatus = false;
         return true;
 	}
@@ -446,14 +529,14 @@ boolean FRAM_MB85RS_SPI::eraseChip()
     uint32_t i = 0;
     boolean result = true;
     
-    #ifdef SER_OUT
+    #ifdef DEBUG_TRACE
         Serial.println("Start erasing device");
     #endif
     
     while( i < _maxaddress && result )
         result = write(i++, (uint8_t)0);
     
-    #ifdef SER_OUT
+    #ifdef DEBUG_TRACE
         if ( !result )
         {
             Serial.print("ERROR: Device erasing stopped at position ");
@@ -502,7 +585,7 @@ void FRAM_MB85RS_SPI::_csCONFIG()
 void FRAM_MB85RS_SPI::_csASSERT()
 {
     SPI.beginTransaction(SPICONFIG);
-    digitalWrite(_cs, LOW);
+    digitalWriteFast(_cs, LOW);
 }
 
 
@@ -513,7 +596,7 @@ void FRAM_MB85RS_SPI::_csASSERT()
 **/
 void FRAM_MB85RS_SPI::_csRELEASE()
 {
-    digitalWrite(_cs, HIGH);
+    digitalWriteFast(_cs, HIGH);
     SPI.endTransaction();
 }
 
@@ -548,7 +631,7 @@ boolean FRAM_MB85RS_SPI::_getDeviceID()
 
 	/* Shift values to separate IDs */
 	_densitycode = buffer[1] &= (1<<5)-1; // Only the 5 first bits
-	_productID = (buffer[2] << 8) + buffer[3]; // Is really necessary to have this info ?
+	_productID = (buffer[2] << 8) + buffer[3]; // Is really necessary to read this info ?
 
 	if (_manufacturer == FUJITSU_ID)
     {
@@ -560,22 +643,22 @@ boolean FRAM_MB85RS_SPI::_getDeviceID()
             case DENSITY_MB85RS512T:
             case DENSITY_MB85RS1MT:
             case DENSITY_MB85RS2MT:
-                // Human readable chip density
                 _density = pow (2, _densitycode+3);
-                // Maximum address on memory chip
                 _maxaddress = _density*128;
                 break;
 
             default:
-                _density = 0;    // means error
-                _maxaddress = 0; // means error
-                return false;    // Fram chip unidentified
+                // F-RAM chip unidentified
+                _density = 0;
+                _maxaddress = 0;
+                return false;
                 break;
         }
     } else {
-        _density = 0;    // means error
-        _maxaddress = 0; // means error
-        return false;    // Fram chip unidentified
+        // F-RAM chip unidentified
+        _density = 0;
+        _maxaddress = 0;
+        return false;
 	}
     
 
@@ -588,7 +671,7 @@ boolean FRAM_MB85RS_SPI::_getDeviceID()
 ///     @brief   _deviceID2Serial()
 ///              Print out F-RAM characteristics
 ///
-///     @return  0: error, no SER_OUT available
+///     @return  0: error, no DEBUG_TRACE available
 ///              1: ok, print out all the datas
 **/
 boolean FRAM_MB85RS_SPI::_deviceID2Serial()
@@ -596,7 +679,7 @@ boolean FRAM_MB85RS_SPI::_deviceID2Serial()
     if (!Serial)
         return false; // Serial not available
     
-	#ifdef SER_OUT
+	#ifdef DEBUG_TRACE
         Serial.println("\n** F-RAM Device IDs");
         Serial.print("Manufacturer 0x"); Serial.println(_manufacturer, HEX);
         Serial.print("ProductID 0x"); Serial.println(_productID, HEX);

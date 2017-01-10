@@ -6,7 +6,7 @@
 	
     @section  HISTORY
 
-    v0.3 - Working Library, see ReadMe for more informations
+    v0.5 - See ReadMe for more informations
     
     Driver for the MB85RC SPI FRAM from Fujitsu.
 	
@@ -49,8 +49,8 @@
 // DEFINES
 
 #define SPICONFIG   SPISettings(28000000, MSBFIRST, SPI_MODE0) // SPI frequency (24 MHz max), MODE 0
-#ifndef SER_OUT
-    #define SER_OUT    // Enabling comment/debug on normal operations
+#ifndef DEBUG_TRACE
+    #define DEBUG_TRACE    // Enabling Debug Trace on Serial
 #endif
 
 // IDs - can be extends to any other compatible chip
@@ -77,7 +77,8 @@
 
 
 // Managing Write protect pin
-#define DEFAULT_WP_STATUS false   // false means protection off, write enabled
+// false means protection off, write enabled
+#define DEFAULT_WP_STATUS false
 
 
 class FRAM_MB85RS_SPI
@@ -88,21 +89,26 @@ class FRAM_MB85RS_SPI
     
 
     void	init();
-    boolean	checkDevice(); // Should be OK
+    boolean	checkDevice();
     
-    boolean	read(uint32_t framAddr, uint8_t *value);    // 8-bits OK
-    boolean	read(uint32_t framAddr, uint16_t *value);   // 16-bits OK
-    boolean	read(uint32_t framAddr, uint32_t *value);   // 32-bits OK
-    boolean	write(uint32_t framAddr, uint8_t value);    // 8-bits OK
-    boolean	write(uint32_t framAddr, uint16_t value);   // 16-bits OK
-    boolean	write(uint32_t framAddr, uint32_t value);   // 32-bits OK
+    boolean	read(uint32_t framAddr, uint8_t *value);
+    boolean	read(uint32_t framAddr, uint16_t *value);
+    boolean	read(uint32_t framAddr, uint32_t *value);
+    boolean	write(uint32_t framAddr, uint8_t value);
+    boolean	write(uint32_t framAddr, uint16_t value);
+    boolean	write(uint32_t framAddr, uint32_t value);
     
-    boolean	isAvailable();      // OK
-    boolean	getWPStatus();      // OK
-    boolean	enableWP();         // OK
-    boolean	disableWP();        // OK
-    boolean	eraseChip();        // OK
-    uint32_t getMaxMemAdr();    // OK
+    boolean readArray(uint32_t startAddr, uint8_t values[], size_t nbItems );
+//    boolean readArray(uint32_t startAddr, uint16_t *values[], uint32_t nbItems );
+    boolean writeArray(uint32_t startAddr, uint8_t values[], uint32_t nbItems );
+//    boolean writeArray(uint32_t startAddr, uint16_t values[], uint32_t nbItems );
+    
+    boolean	isAvailable();
+    boolean	getWPStatus();
+    boolean	enableWP();
+    boolean	disableWP();
+    boolean	eraseChip();
+    uint32_t getMaxMemAdr();
     
     
  private:
@@ -118,12 +124,12 @@ class FRAM_MB85RS_SPI
     uint16_t	_density;       // Human readable size of F-RAM chip
     uint32_t	_maxaddress;    // Maximum address suported by F-RAM chip
     
-    void        _csCONFIG();        // OK
-    void        _csASSERT();        // OK
-    void        _csRELEASE();       // OK
-    boolean     _getDeviceID();     // OK
-    boolean     _deviceID2Serial(); // OK
-    void        _setMemAddr(uint32_t *framAddr); // OK
+    void        _csCONFIG();
+    void        _csASSERT();
+    void        _csRELEASE();
+    boolean     _getDeviceID();
+    boolean     _deviceID2Serial();
+    void        _setMemAddr(uint32_t *framAddr);
 };
 
 
