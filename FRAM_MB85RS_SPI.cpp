@@ -8,7 +8,7 @@
 
     @section  HISTORY
 
-    v0.6 - See ReadMe for more informations
+    v0.7 - See ReadMe for more informations
  
     @section LICENSE
 
@@ -182,6 +182,8 @@ boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint8_t *value )
         *value = SPI.transfer(0);
     _csRELEASE();
     
+    _lastaddress = framAddr+1;
+    
     return true;
 }
 
@@ -212,6 +214,8 @@ boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint16_t *value )
     _csRELEASE();
     
     *value = ((uint16_t) buffer[1] << 8) + (uint16_t)buffer[0];
+    
+    _lastaddress = framAddr+2;
     
     return true;
 }
@@ -245,6 +249,8 @@ boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint32_t *value )
     _csRELEASE();
    
     *value = ( (uint32_t)buffer[2] << 16) + ((uint32_t)buffer[1] << 8) + (uint32_t)buffer[0];
+    
+    _lastaddress = framAddr+4;
     
     return true;
 }
@@ -282,6 +288,8 @@ boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint8_t value )
         SPI.transfer(FRAM_WRDI);
     _csRELEASE();
     
+    _lastaddress = framAddr+1;
+    
 	return true;
 }
 
@@ -318,6 +326,8 @@ boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint16_t value )
     _csASSERT();
         SPI.transfer(FRAM_WRDI);
     _csRELEASE();
+    
+    _lastaddress = framAddr+2;
     
     return true;
 }
@@ -357,6 +367,8 @@ boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint32_t value )
     _csASSERT();
         SPI.transfer(FRAM_WRDI);
     _csRELEASE();
+    
+    _lastaddress = framAddr+4;
     
     return true;
 }
@@ -398,6 +410,8 @@ boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint8_t values[], size_t
     
     _csRELEASE();
     
+    _lastaddress = startAddr + nbItems - 1;
+    
     return true;
 }
 
@@ -416,7 +430,7 @@ boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint8_t values[], size_t
 boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint16_t values[], size_t nbItems )
 {
     if ( startAddr >= _maxaddress
-        || ((startAddr + (nbItems*2) - 1) >= _maxaddress)
+        || ((startAddr + (nbItems*2) - 2) >= _maxaddress)
         || nbItems == 0
         || !_framInitialised )
         return false;
@@ -436,11 +450,13 @@ boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint16_t values[], size_
             values[i] = ((uint16_t) buffer[1] << 8) + (uint16_t)buffer[0];
             
 #ifdef DEBUG_TRACE
-            Serial.print("Adr 0x"); Serial.print(startAddr+(i+1), HEX);
+            Serial.print("Adr 0x"); Serial.print(startAddr+(i*2), HEX);
             Serial.print(", Value[");Serial.print(i); Serial.print("] = 0x"); Serial.println(values[i], HEX);
 #endif
         }
     _csRELEASE();
+    
+    _lastaddress = startAddr + (nbItems*2) - 2;
     
     return true;
 }
@@ -484,6 +500,8 @@ boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint8_t values[], size_
         SPI.transfer(FRAM_WRDI);
     _csRELEASE();
     
+    _lastaddress = startAddr + nbItems - 1;
+    
     return true;
 }
 
@@ -502,7 +520,7 @@ boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint8_t values[], size_
 boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint16_t values[], size_t nbItems )
 {
     if ( startAddr >= _maxaddress
-        || ((startAddr + (nbItems*2) - 1) >= _maxaddress)
+        || ((startAddr + (nbItems*2) - 2) >= _maxaddress)
         || nbItems == 0
         || !_framInitialised )
         return false;
@@ -529,6 +547,8 @@ boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint16_t values[], size
     _csASSERT();
         SPI.transfer(FRAM_WRDI);
     _csRELEASE();
+    
+    _lastaddress = startAddr + (nbItems*2) - 2;
     
     return true;
 }
@@ -635,6 +655,8 @@ boolean FRAM_MB85RS_SPI::eraseChip()
             Serial.println("Device erased!");
     #endif
     
+    _lastaddress = _maxaddress;
+    
     return result;
 }
 
@@ -648,6 +670,24 @@ uint32_t FRAM_MB85RS_SPI::getMaxMemAdr()
 {
     return _maxaddress;
 }
+
+
+
+/*!
+ ///    @brief   getLastMemAdr()
+ ///             Return the last memory address writen or read
+ ///    @return  _lastaddress
+ **/
+uint32_t FRAM_MB85RS_SPI::getLastMemAdr()
+{
+#ifdef DEBUG_TRACE
+    Serial.print("Last address used in memory: 0x");
+    Serial.println(_lastaddress, HEX);
+#endif
+    return _lastaddress;
+}
+
+
 
 
 /*========================================================================*/
@@ -799,5 +839,7 @@ void FRAM_MB85RS_SPI::_setMemAddr( uint32_t *framAddr )
     SPI.transfer((*framAddr >> 8) & 0xFF);    // Bits 8 to 15
     if (_densitycode >= DENSITY_MB85RS1MT)
         SPI.transfer((*framAddr >> 16) & 0xFF);  // Bits 16 to 23
+    
+    _lastaddress = *framAddr;
 }
 

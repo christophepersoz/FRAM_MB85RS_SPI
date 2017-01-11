@@ -6,7 +6,7 @@
 	
     @section  HISTORY
 
-    v0.6 - See ReadMe for more informations
+    v0.7 - See ReadMe for more informations
     
     Driver for the MB85RC SPI FRAM from Fujitsu.
 	
@@ -50,10 +50,10 @@
 
 #define SPICONFIG   SPISettings(28000000, MSBFIRST, SPI_MODE0) // SPI frequency (24 MHz max), MODE 0
 #ifndef DEBUG_TRACE
-//    #define DEBUG_TRACE    // Enabling Debug Trace on Serial
+    #define DEBUG_TRACE    // Enabling Debug Trace on Serial
 #endif
 #ifndef CHIP_TRACE
-    #define CHIP_TRACE // Serial trace for characteristics of the chip
+    #define CHIP_TRACE     // Serial trace for characteristics of the chip
 #endif
 
 
@@ -113,6 +113,7 @@ class FRAM_MB85RS_SPI
     boolean	disableWP();
     boolean	eraseChip();
     uint32_t getMaxMemAdr();
+    uint32_t getLastMemAdr();
     
     
  private:
@@ -127,6 +128,7 @@ class FRAM_MB85RS_SPI
     uint8_t     _densitycode;   // Code which represent the size of the chip
     uint16_t	_density;       // Human readable size of F-RAM chip
     uint32_t	_maxaddress;    // Maximum address suported by F-RAM chip
+    uint32_t    _lastaddress;   // Last address used in memory
     
     void        _csCONFIG();
     void        _csASSERT();

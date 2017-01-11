@@ -5,16 +5,16 @@
     @license  BSD (see license.txt)
 
     This sketch connects the FRAM chips.
-    Reads and Writes differents kinds of data type into F-RAM
-    Dump the full memory (optional with define)
-    Erase the complete chip (optional with define)
+    Once ok, it read/write Byte, Short, Long at different addresses.
+    Dump the full memory
+    Erase the complete chip (if ERASE_FRAM is defined)
  
-    All the operations are visible on Serial if DEBUG_TRACE is defined in .h
-    The execution time of all the operations is indicated in microseconds or seconds
+    All the operations are visible on Serial if SER_OUT is defined
+    and the execution time of all of them is indicated
 
     @section  HISTORY
 
-    v0.6 - See ReadMe for more informations
+    v1.0.0 - First release
  
  */
 /**************************************************************************/
@@ -23,7 +23,7 @@
 #include <FRAM_MB85RS_SPI.h>
 
 // Defines
-//#define ERASE_FRAM  // Erase FRAM at the end of setup
+//#define ERASE_FRAM  // Erase FRAM at the end of setup if defined
 //#define DUMP_FRAM   // Full dump of the memory
 
 // Prototypes
@@ -148,7 +148,8 @@ void setup()
     printTime();
   else
     Serial.println("ERROR writing the array");
-
+  FRAM.getLastMemAdr();
+  
 
   //** READ an array of bytes
   Serial.print("\n** READ an array of 10 bytes(uint8_t) elements\n");
@@ -157,19 +158,21 @@ void setup()
     printTime();
   else
     Serial.println("ERROR reading the array");
-
+  FRAM.getLastMemAdr();
+  
 
  //** WRITE an array of short
   Serial.print("\n** WRITE an array of 10 short(uint16_t) elements\n");
   uint16_t arrayS[10] = { 0x4E3, 0x8DDE, 0xFFFF, 0x2A22, 0x6F, 0x4D99, 0x56AA, 0x9D10, 0x32BC, 0x1A2C }; 
-  addrArray = 0xB;
+  addrArray = 0x10;
   
   _tExe = 0;
   if (FRAM.writeArray(addrArray, arrayS, 10))
     printTime();
   else
     Serial.println("ERROR writing the array");
-
+  FRAM.getLastMemAdr();
+  
 
   //** READ an array of bytes
   Serial.print("\n** READ an array of 10 short(uint16_t) elements\n");
@@ -178,7 +181,7 @@ void setup()
     printTime();
   else
     Serial.println("ERROR reading the array");
-
+  FRAM.getLastMemAdr();
     
 
   //** Dump the entire memory!
