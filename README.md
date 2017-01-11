@@ -23,7 +23,7 @@ These memories chips can work up to 25MHz in SPI Mode 0 or Mode 3.
 
 
 ## Revision History ##
-v0.6 - Working version
+v0.7 - Working version
 Please note when you activate DEBUG_TRACE & CHIP_TRACE in .h the performances are slower than it should be. Serial trace takes times! Avoid the use of DEBUG_TRACE & CHIP_TRACE for a normal usage.
 
 [Download it here !](https://github.com/christophepersoz/FRAM_MB85RS_SPI/archive/master.zip)
@@ -54,9 +54,12 @@ Please note when you activate DEBUG_TRACE & CHIP_TRACE in .h the performances ar
 - [x] Update/change examples
 - [x] Read / Write an array of bytes
 - [x] Read / Write one array of shorts
-- [x] Publish a working version
+- [x] Getter for Max memory address and Last memory address used on read/write op
+- [ ] v1.0 - First complete release
+- [ ] v1.2 - Thinking about expand the lib to Cypress F-RAM chip
+- [ ] Forked the repo and create the lib for M-RAM chips
 
-Close to final v1.0 release
+Close to the complete release...
 
 
 ## Testing ##
