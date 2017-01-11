@@ -1,7 +1,7 @@
 /**************************************************************************/
 /*!
     @file     FRAM_MB85RS_SPI.cpp
-    @author   Christophe PERSOZ
+    @author   Christophe Persoz
     @license  BSD (see license.txt)
 
     Driver for the MB85RS SPI FRAM series from Fujitsu.

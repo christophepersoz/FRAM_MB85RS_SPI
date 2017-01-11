@@ -1,7 +1,7 @@
 /**************************************************************************/
 /*! 
     @file     FRAM_MB85RS_SPI.h
-    @author   Christophe PERSOZ for SPI version
+    @author   Christophe Persoz for SPI version
               SOSAndroid.fr (E. Ha.) for I2C version
 	
     @section  HISTORY
