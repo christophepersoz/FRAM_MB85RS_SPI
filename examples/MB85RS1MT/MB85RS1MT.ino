@@ -5,16 +5,16 @@
     @license  BSD (see license.txt)
 
     This sketch connects the FRAM chips.
-    Once ok, it read/write Byte, Short, Long at different addresses.
-    Dump the full memory
-    Erase the complete chip (if ERASE_FRAM is defined)
+    Reads and Writes differents kinds of data type into F-RAM
+    Dump the full memory (optional with define)
+    Erase the complete chip (optional with define)
  
-    All the operations are visible on Serial if SER_OUT is defined
-    and the execution time of all of them is indicated
+    All the operations are visible on Serial if DEBUG_TRACE is defined in .h
+    The execution time of all the operations is indicated in microseconds or seconds
 
     @section  HISTORY
 
-    v1.0.0 - First release
+    v0.6 - See ReadMe for more informations
  
  */
 /**************************************************************************/
@@ -23,7 +23,7 @@
 #include <FRAM_MB85RS_SPI.h>
 
 // Defines
-//#define ERASE_FRAM  // Erase FRAM at the end of setup if defined
+//#define ERASE_FRAM  // Erase FRAM at the end of setup
 //#define DUMP_FRAM   // Full dump of the memory
 
 // Prototypes
