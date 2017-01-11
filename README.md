@@ -23,7 +23,7 @@ These memories chips can work up to 25MHz in SPI Mode 0 or Mode 3.
 
 
 ## Revision History ##
-v0.5 - Working version
+v0.6 - Working version
 Please note when you activate DEBUG_TRACE & CHIP_TRACE in .h the performances are slower than it should be. Serial trace takes times! Avoid the use of DEBUG_TRACE & CHIP_TRACE for a normal usage.
 
 [Download it here !](https://github.com/christophepersoz/FRAM_MB85RS_SPI/archive/master.zip)
