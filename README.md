@@ -24,7 +24,7 @@ These memories chips can work up to 25MHz in SPI Mode 0 or Mode 3.
 
 ## Revision History ##
 v0.5 - Working version
-Please note when you activate DEBUG_TRACE in .h the performances are slower than it should be. Serial trace takes times! Avoid the use of DEBUG_TRACE for normal usage.
+Please note when you activate DEBUG_TRACE & CHIP_TRACE in .h the performances are slower than it should be. Serial trace takes times! Avoid the use of DEBUG_TRACE & CHIP_TRACE for a normal usage.
 
 [Download it here !](https://github.com/christophepersoz/FRAM_MB85RS_SPI/archive/master.zip)
 
@@ -53,9 +53,9 @@ Please note when you activate DEBUG_TRACE in .h the performances are slower than
 - [x] Tests on MB85RS1MT SPI
 - [x] Update/change examples
 - [x] Read / Write an array of bytes
-- [ ] Read / Write one array of shorts
+- [x] Read / Write one array of shorts
 - [x] Publish a working version
-There is a bit of work to adapt the original library, but it's on the good way.
+Almost complete...
 
 
 ## Testing ##
