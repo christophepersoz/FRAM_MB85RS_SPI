@@ -55,7 +55,8 @@ Please note when you activate DEBUG_TRACE & CHIP_TRACE in .h the performances ar
 - [x] Read / Write an array of bytes
 - [x] Read / Write one array of shorts
 - [x] Publish a working version
-Almost complete...
+
+Close to final v1.0 release
 
 
 ## Testing ##
