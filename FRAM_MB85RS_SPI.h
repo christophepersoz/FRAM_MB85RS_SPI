@@ -6,7 +6,7 @@
 	
     @section  HISTORY
 
-    v0.5 - See ReadMe for more informations
+    v0.6 - See ReadMe for more informations
     
     Driver for the MB85RC SPI FRAM from Fujitsu.
 	
@@ -50,8 +50,12 @@
 
 #define SPICONFIG   SPISettings(28000000, MSBFIRST, SPI_MODE0) // SPI frequency (24 MHz max), MODE 0
 #ifndef DEBUG_TRACE
-    #define DEBUG_TRACE    // Enabling Debug Trace on Serial
+//    #define DEBUG_TRACE    // Enabling Debug Trace on Serial
 #endif
+#ifndef CHIP_TRACE
+    #define CHIP_TRACE // Serial trace for characteristics of the chip
+#endif
+
 
 // IDs - can be extends to any other compatible chip
 #define FUJITSU_ID 0x04
@@ -99,9 +103,9 @@ class FRAM_MB85RS_SPI
     boolean	write(uint32_t framAddr, uint32_t value);
     
     boolean readArray(uint32_t startAddr, uint8_t values[], size_t nbItems );
-//    boolean readArray(uint32_t startAddr, uint16_t *values[], uint32_t nbItems );
-    boolean writeArray(uint32_t startAddr, uint8_t values[], uint32_t nbItems );
-//    boolean writeArray(uint32_t startAddr, uint16_t values[], uint32_t nbItems );
+    boolean readArray(uint32_t startAddr, uint16_t values[], size_t nbItems );
+    boolean writeArray(uint32_t startAddr, uint8_t values[], size_t nbItems );
+    boolean writeArray(uint32_t startAddr, uint16_t values[], size_t nbItems );
     
     boolean	isAvailable();
     boolean	getWPStatus();

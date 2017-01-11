@@ -140,27 +140,45 @@ void setup()
 
   //** WRITE an array of bytes
   Serial.print("\n** WRITE an array of 10 bytes(uint8_t) elements\n");
-  _tExe = 0;
-  uint8_t arrayB[10] = {0x4, 0x8, 0xFF, 0x2A, 0x6F, 0x4D, 0x56, 0x9D, 0x32, 0x12}; 
+  uint8_t arrayB[10] = { 0x4, 0x8, 0xFF, 0x2A, 0x6F, 0x4D, 0x56, 0x9D, 0x32, 0x12 };
   uint32_t addrArray = 0x0;
-  
+
+  _tExe = 0;
   if (FRAM.writeArray(addrArray, arrayB, 10))
     printTime();
   else
-    Serial.println("ERROR to write the array");
+    Serial.println("ERROR writing the array");
 
 
   //** READ an array of bytes
   Serial.print("\n** READ an array of 10 bytes(uint8_t) elements\n");
   _tExe = 0;
-
   if (FRAM.readArray(addrArray, arrayB, 10))
     printTime();
   else
-    Serial.println("ERROR to read the array");
+    Serial.println("ERROR reading the array");
 
 
+ //** WRITE an array of short
+  Serial.print("\n** WRITE an array of 10 short(uint16_t) elements\n");
+  uint16_t arrayS[10] = { 0x4E3, 0x8DDE, 0xFFFF, 0x2A22, 0x6F, 0x4D99, 0x56AA, 0x9D10, 0x32BC, 0x1A2C }; 
+  addrArray = 0xB;
   
+  _tExe = 0;
+  if (FRAM.writeArray(addrArray, arrayS, 10))
+    printTime();
+  else
+    Serial.println("ERROR writing the array");
+
+
+  //** READ an array of bytes
+  Serial.print("\n** READ an array of 10 short(uint16_t) elements\n");
+  _tExe = 0;
+  if (FRAM.readArray(addrArray, arrayS, 10))
+    printTime();
+  else
+    Serial.println("ERROR reading the array");
+
     
 
   //** Dump the entire memory!

@@ -8,7 +8,7 @@
 
     @section  HISTORY
 
-    v0.5 - See ReadMe for more informations
+    v0.6 - See ReadMe for more informations
  
     @section LICENSE
 
@@ -110,7 +110,7 @@ void FRAM_MB85RS_SPI::init()
     
     boolean deviceFound = checkDevice();
     
-#ifdef DEBUG_TRACE
+#if defined(DEBUG_TRACE) || defined(CHIP_TRACE)
     if (!Serial)
         Serial.begin(115200);
     while (!Serial) {}
@@ -158,13 +158,13 @@ boolean FRAM_MB85RS_SPI::checkDevice()
 
 /*!
 ///     @brief   read()
-///              Read a 8bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 8bits value to read
+///              Read a 8-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 8-bits value to read
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint8_t *value)
+boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint8_t *value )
 {
     if (framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -189,13 +189,13 @@ boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint8_t *value)
 
 /*!
 ///     @brief   read()
-///              Read a 16bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 16bits value to read
+///              Read a 16-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 16-bits value to read
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint16_t *value)
+boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint16_t *value )
 {
     if (framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -220,13 +220,13 @@ boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint16_t *value)
 
 /*!
 ///     @brief   read()
-///              Read a 32bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 32bits value to read
+///              Read a 32-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 32-bits value to read
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint32_t *value)
+boolean FRAM_MB85RS_SPI::read( uint32_t framAddr, uint32_t *value )
 {
     if (framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -253,13 +253,13 @@ boolean FRAM_MB85RS_SPI::read(uint32_t framAddr, uint32_t *value)
 
 /*!
 ///     @brief   write()
-///              Write a 8bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 8bits value to write
+///              Write a 8-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 8-bits value to write
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint8_t value)
+boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint8_t value )
 {
     if (value > 0xFF || framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -289,13 +289,13 @@ boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint8_t value)
 
 /*!
 ///     @brief   write()
-///              Write a 16bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 16bits value to write
+///              Write a 16-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 16-bits value to write
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint16_t value)
+boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint16_t value )
 {
     if (value > 0xFFFF || framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -326,13 +326,13 @@ boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint16_t value)
 
 /*!
 ///     @brief   write()
-///              Write a 32bits value to the specified F-RAM address
-///     @param   framAddr, the memory address on 32bits
-///     @param   value, the 32bits value to write
+///              Write a 32-bits value to the specified F-RAM address
+///     @param   framAddr, the memory address on 32-bits
+///     @param   value, the 32-bits value to write
 ///     @return  0: error
 ///              1: ok
 **/
-boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint32_t value)
+boolean FRAM_MB85RS_SPI::write( uint32_t framAddr, uint32_t value )
 {
     if (value > 0xFFFFFFFF || framAddr >= _maxaddress || !_framInitialised)
         return false;
@@ -365,15 +365,15 @@ boolean FRAM_MB85RS_SPI::write(uint32_t framAddr, uint32_t value)
 
 /*!
 ///     @brief   readArray()
-///              Read an array made of 8bits values from the specified F-RAM address
+///              Read an array made of 8-bits values from the specified F-RAM address
 ///     @param   framAddr, the memory address to read from
-///     @param   values[], the array of 8bits value to read
+///     @param   values[], the array of 8-bits value to read
 ///     @param   nb, the number of elements to read
 ///     @return  0: error
 ///              1: ok
 ///     @note    F-RAM provide a continuous reading with auto-increment of the address
 **/
-boolean FRAM_MB85RS_SPI::readArray(uint32_t startAddr, uint8_t values[], size_t nbItems )
+boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint8_t values[], size_t nbItems )
 {
     if ( startAddr >= _maxaddress
         || ((startAddr + nbItems - 1) >= _maxaddress)
@@ -404,16 +404,60 @@ boolean FRAM_MB85RS_SPI::readArray(uint32_t startAddr, uint8_t values[], size_t 
 
 
 /*!
+ ///     @brief   readArray()
+ ///              Read an array made of 16-bits values from the specified F-RAM address
+ ///     @param   framAddr, the memory address to read from
+ ///     @param   values[], the array of 16-bits value to read
+ ///     @param   nb, the number of elements to read
+ ///     @return  0: error
+ ///              1: ok
+ ///     @note    F-RAM provide a continuous reading with auto-increment of the address
+ **/
+boolean FRAM_MB85RS_SPI::readArray( uint32_t startAddr, uint16_t values[], size_t nbItems )
+{
+    if ( startAddr >= _maxaddress
+        || ((startAddr + (nbItems*2) - 1) >= _maxaddress)
+        || nbItems == 0
+        || !_framInitialised )
+        return false;
+    
+    uint8_t buffer[2];
+    
+    _csASSERT();
+        // Read byte operation
+        SPI.transfer(FRAM_READ);
+        _setMemAddr(&startAddr);
+        
+        // Read values
+        for (uint32_t i = 0; i < nbItems; i++)
+        {
+            buffer[0] = SPI.transfer(0);
+            buffer[1] = SPI.transfer(0);
+            values[i] = ((uint16_t) buffer[1] << 8) + (uint16_t)buffer[0];
+            
+#ifdef DEBUG_TRACE
+            Serial.print("Adr 0x"); Serial.print(startAddr+(i+1), HEX);
+            Serial.print(", Value[");Serial.print(i); Serial.print("] = 0x"); Serial.println(values[i], HEX);
+#endif
+        }
+    _csRELEASE();
+    
+    return true;
+}
+
+
+
+/*!
 ///     @brief   writeArray()
-///              Write an array made of 8bits values from the specified F-RAM address
+///              Write an array made of 8-bits values from the specified F-RAM address
 ///     @param   framAddr, the memory address to write from
-///     @param   values[], the array of 8bits value to write
+///     @param   values[], the array of 8-bits value to write
 ///     @param   nb, the number of elements to write
 ///     @return  0: error
 ///              1: ok
 ///     @note    F-RAM provide a continuous writing with auto-increment of the address
 **/
-boolean FRAM_MB85RS_SPI::writeArray(uint32_t startAddr, uint8_t values[], uint32_t nbItems )
+boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint8_t values[], size_t nbItems )
 {
     if ( startAddr >= _maxaddress
         || ((startAddr + nbItems - 1) >= _maxaddress)
@@ -421,19 +465,64 @@ boolean FRAM_MB85RS_SPI::writeArray(uint32_t startAddr, uint8_t values[], uint32
         || !_framInitialised )
         return false;
     
+    // Set Memory Write Enable Latch
     _csASSERT();
-        SPI.transfer(FRAM_WREN); // Set Memory Write Enable Latch
+        SPI.transfer(FRAM_WREN);
     _csRELEASE();
     
     // Write byte operation
     _csASSERT();
-    SPI.transfer(FRAM_WRITE);
-    _setMemAddr(&startAddr);
+        SPI.transfer(FRAM_WRITE);
+        _setMemAddr(&startAddr);
+        // Write values
+        for (uint32_t i = 0; i < nbItems; i++)
+            SPI.transfer(values[i]);
+    _csRELEASE();
     
-    // Write values
-    for (uint32_t i = 0; i < nbItems; i++)
-        SPI.transfer(values[i]);
+    // Reset Memory Write Enable Latch
+    _csASSERT();
+        SPI.transfer(FRAM_WRDI);
+    _csRELEASE();
     
+    return true;
+}
+
+
+
+/*!
+ ///     @brief   writeArray()
+ ///              Write an array made of 16-bits values from the specified F-RAM address
+ ///     @param   framAddr, the memory address to write from
+ ///     @param   values[], the array of 16-bits value to write
+ ///     @param   nb, the number of elements to write
+ ///     @return  0: error
+ ///              1: ok
+ ///     @note    F-RAM provide a continuous writing with auto-increment of the address
+ **/
+boolean FRAM_MB85RS_SPI::writeArray( uint32_t startAddr, uint16_t values[], size_t nbItems )
+{
+    if ( startAddr >= _maxaddress
+        || ((startAddr + (nbItems*2) - 1) >= _maxaddress)
+        || nbItems == 0
+        || !_framInitialised )
+        return false;
+    
+    // Set Memory Write Enable Latch
+    _csASSERT();
+        SPI.transfer(FRAM_WREN);
+    _csRELEASE();
+    
+    // Write byte operation
+    _csASSERT();
+        SPI.transfer(FRAM_WRITE);
+        _setMemAddr(&startAddr);
+        
+        // Write values
+        for (uint32_t i = 0; i < nbItems; i++)
+        {
+            SPI.transfer(values[i]);
+            SPI.transfer((values[i] >> 8) & 0xFF);
+        }
     _csRELEASE();
     
     // Reset Memory Write Enable Latch
@@ -679,7 +768,7 @@ boolean FRAM_MB85RS_SPI::_deviceID2Serial()
     if (!Serial)
         return false; // Serial not available
     
-	#ifdef DEBUG_TRACE
+	#ifdef CHIP_TRACE
         Serial.println("\n** F-RAM Device IDs");
         Serial.print("Manufacturer 0x"); Serial.println(_manufacturer, HEX);
         Serial.print("ProductID 0x"); Serial.println(_productID, HEX);
@@ -699,12 +788,12 @@ boolean FRAM_MB85RS_SPI::_deviceID2Serial()
 
 /*!
 ///     @brief   _setMemAddr()
-///              Set the memory address coded on 24bits over SPI
+///              Set the memory address coded on 24-bits over SPI
 ///              Only chip of 1Mbit or above have their address on 24bit,
-///              all the other chip are addressed on 16bits only.
+///              all the other chip are addressed on 16-bits only.
 ///     @param   framAddr, the 32bit address to send
 **/
-void FRAM_MB85RS_SPI::_setMemAddr(uint32_t *framAddr)
+void FRAM_MB85RS_SPI::_setMemAddr( uint32_t *framAddr )
 {
     SPI.transfer(*framAddr & 0xFF);  // MSB, Bits 0 to 7
     SPI.transfer((*framAddr >> 8) & 0xFF);    // Bits 8 to 15
