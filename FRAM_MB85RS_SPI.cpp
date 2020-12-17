@@ -835,8 +835,9 @@ boolean FRAM_MB85RS_SPI::_deviceID2Serial()
 **/
 void FRAM_MB85RS_SPI::_setMemAddr( uint32_t *framAddr )
 {
-    SPI.transfer(*framAddr & 0xFF);  // MSB, Bits 0 to 7
-    SPI.transfer((*framAddr >> 8) & 0xFF);    // Bits 8 to 15
+    SPI.transfer((*framAddr >> 8) & 0xFF);    // MSB Bits 8 to 15
+    SPI.transfer(*framAddr & 0xFF);  //  Bits 0 to 7
+
     if (_densitycode >= DENSITY_MB85RS1MT)
         SPI.transfer((*framAddr >> 16) & 0xFF);  // Bits 16 to 23
     
